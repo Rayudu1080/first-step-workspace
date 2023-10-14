@@ -7,6 +7,7 @@
             <th>Firstname</th> 
             <th>Lastname</th> 
             <th>Email</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,10 @@
             <td>{{emp.firstname}}</td> 
             <td>{{emp.lastname}}</td> 
             <td>{{emp.email}}</td> 
+            <td>
+                <button (click)="updateEmployee(emp.id)" class="btn btn-info">Edit</button>
+                <button (click)="removeEmployee(emp.id)" class="btn btn-danger" style="margin-left: 10px;">Delete</button>
+            </td>
         </tr>
     </tbody>
 </table>
