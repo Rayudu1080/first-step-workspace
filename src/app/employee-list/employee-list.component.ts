@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Employee } from '../employee';
 import { EmployeeServiceService } from '../employee-service.service';
 import { Router } from '@angular/router';
+import { Observer } from 'rxjs';
 
 @Component({
   selector: 'app-employee-list',
@@ -31,10 +32,26 @@ export class EmployeeListComponent {
   }
 
   removeEmployee(id: any){
-    this.empService.deleteEmployee(id).subscribe(data=>{
+   /* this.empService.deleteEmployee(id).subscribe(data=>{
       console.log(data);
       this.getEmployees();
-    }, error=> console.log(error))
+    }, error=> console.log(error));*/
+
+    const observer: Observer<any> = {
+      next: (data: any) => {
+        console.log(data);
+      },
+      complete: () => {
+        
+        this.getEmployees();
+      },
+      error : (err: Error) => {
+        console.error(err);
+      }
+    }
+    this.empService.deleteEmployee(id).subscribe(observer);
+    
+  //   this.router.navigate(['/employees']);
   }
 
 }
