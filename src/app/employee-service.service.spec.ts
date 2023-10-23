@@ -63,7 +63,7 @@ describe('EmployeeServiceService', () => {
    */
   describe('createEmployee', () => {
     it('should create a new employee', () => {
-      const newEmployee: Employee = { id: 4, firstname: 'John', lastname: 'Doe', email: 'John@gmail.com' };
+      const newEmployee: Employee = { id: 4, firstname: 'John', lastname: 'Doe', email: 'John@gmail.com', phone: "977875759", address: "5654 hallow dr, Tx 65644"  };
   
       service.createEmployee(newEmployee).subscribe((response: any) => {
         expect(response).toBeTruthy();
@@ -78,7 +78,7 @@ describe('EmployeeServiceService', () => {
     });
   
     it('should handle errors', () => {
-      const newEmployee: Employee = { id: 4, firstname: 'John', lastname: 'Doe', email: 'John@gmail.com' };
+      const newEmployee: Employee = { id: 4, firstname: 'John', lastname: 'Doe', email: 'John@gmail.com' , phone: "977875759", address: "5654 hallow dr, Tx 65644"  };
   
       service.createEmployee(newEmployee).subscribe({
         error: (error) => {
@@ -137,7 +137,9 @@ describe('EmployeeServiceService', () => {
       const changes: Employee = { id: empId ,
                                   firstname: 'TestFirstname',
                                   lastname: 'TestLastname',
-                                  email: 'Testmail@gmail.com' };
+                                  email: 'Testmail@gmail.com',
+                                  phone: "977875759", 
+                                  address: "5654 hallow dr, Tx 65644" };
 
       service.updateEmployee(empId, changes).subscribe((employee: Employee) => {
         expect(employee).toBeTruthy();
@@ -159,7 +161,9 @@ describe('EmployeeServiceService', () => {
       const changes: Employee = { id: empId ,
         firstname: 'TestFirstname',
         lastname: 'TestLastname',
-        email: 'Testmail@gmail.com' };
+        email: 'Testmail@gmail.com', 
+        phone: "977875759", 
+        address: "5654 hallow dr, Tx 65644"  };
 
       service.updateEmployee(empId, changes).subscribe({
         error: (error) => {

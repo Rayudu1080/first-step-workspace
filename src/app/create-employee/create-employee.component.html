@@ -1,24 +1,51 @@
 <div class="col-md-6 offset-md-3">
 <h2>Create Employee</h2>
-<form (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()" #employeeForm="ngForm">
     <div class="form-group">
         <label>FirstName</label>
-        <input type="text" id="firstname" [(ngModel)]="employee.firstname"
-        name="firstname" class="form-control">
+        <input type="text" id="firstname" 
+        [(ngModel)]="employee.firstname"
+        name="firstname" class="form-control" required>
     </div>
 
     <div class="form-group">
         <label>LastName</label>
         <input type="text" id="lastname" [(ngModel)]="employee.lastname"
-        name="lastname" class="form-control">
+        name="lastname" class="form-control" required>
     </div>
 
     <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="employee.email" name="email" class="form-control" required email>
+        <div *ngIf="employeeForm.controls['email'].invalid && (employeeForm.controls['email'].dirty || employeeForm.controls['email'].touched)">
+          <div *ngIf="employeeForm.controls['email'].hasError('required')" class="error">Email is required.</div>
+          <div *ngIf="employeeForm.controls['email'].hasError('email')" class="error">Invalid email format.</div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" [(ngModel)]="employee.phone" name="phone" class="form-control" required pattern="^\d{10}$">
+        <div *ngIf="employeeForm.controls['phone'].invalid && (employeeForm.controls['phone'].dirty || employeeForm.controls['phone'].touched)">
+          <div *ngIf="employeeForm.controls['phone'].hasError('required')" class="error">Phone number is required.</div>
+          <div *ngIf="employeeForm.controls['phone'].hasError('pattern')" class="error">Invalid phone number format (e.g., 1234567890).</div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" [(ngModel)]="employee.address" name="address" class="form-control" required></textarea>
+      </div>
+  
+      <button class="btn btn-success" type="submit" [disabled]="employeeForm.invalid">Submit</button>
+    <!-- <div class="form-group">
         <label>Email</label>
         <input type="text" id="email" [(ngModel)]="employee.email"
         name="email" class="form-control">
     </div>
 
-    <button class="btn btn-success" type="submit">Submit</button>
+
+
+    <button class="btn btn-success" type="submit">Submit</button> -->
 </form>
 </div>

@@ -32,9 +32,9 @@ describe('EmployeeListComponent', () => {
   it('should list the employees in correct order', () => {
     // Setting up  test data
     const testData = [
-        { id: 1, firstname: 'John', lastname: 'wick', email: 'wick@gmail.com' },
-        { id: 2, firstname: 'Narendra', lastname: 'S', email: 'naren@gmail.com' },
-        { id: 3, firstname: 'test', lastname: 'test', email: 'test@gmail.com' }
+        { id: 1, firstname: 'John', lastname: 'wick', email: 'wick@gmail.com', phone: "977875759", address: "5654 hallow dr, Tx 65644" },
+        { id: 2, firstname: 'Narendra', lastname: 'S', email: 'naren@gmail.com' , phone: "867647688", address: "866 yuni dr, Tx 58787" },
+        { id: 3, firstname: 'test', lastname: 'test', email: 'test@gmail.com' , phone: "325657688", address: "5654 ok dr, Tx 65878" }
     ];
 
     // Assigning the test data to component
