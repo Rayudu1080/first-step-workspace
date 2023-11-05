@@ -71,7 +71,8 @@ export class UpdateEmployeeComponent {
 
   // EmpForm: NgForm;
 
-  @ViewChild('employeeForm',{static: true}) employeeForm?: NgForm;
+  @ViewChild('employeeForm', { static: true })
+  employeeForm!: NgForm;
 
   constructor(private empService: EmployeeServiceService,
     private route: ActivatedRoute,

@@ -3,7 +3,7 @@ import { FormsModule, NgForm, FormControl, Validators, FormGroup } from '@angula
 import { UpdateEmployeeComponent } from './update-employee.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
+import { first, of } from 'rxjs';
 
 describe('UpdateEmployeeComponent', () => {
   let component: UpdateEmployeeComponent;
@@ -33,44 +33,176 @@ describe('UpdateEmployeeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have a form with required fields', () => {
-    const form = new FormGroup({
-      firstname: new FormControl('', Validators.required),
-      lastname: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      phone: new FormControl('', [Validators.required, Validators.pattern('^\d{10}$')]),
-      address: new FormControl('', Validators.required),
-    }); 
 
-    form.controls['firstname'].setValue('John');
-    form.controls['lastname'].setValue('Doe');
-    form.controls['email'].setValue('john.doe@example.com');
-    form.controls['phone'].setValue('1234567890');
-    form.controls['address'].setValue('123 Main St.');
+  it('should have a form with required fields', fakeAsync(() => {
+    const form = component.employeeForm;
+    expect(form).toBeTruthy();
 
-    expect(form.valid).toBeTruthy();
-  });
+    const formControls = form.form.controls; 
 
-  it('should submit the form when valid', fakeAsync(() => {
-    const form = new FormGroup({
-      firstname: new FormControl('John', Validators.required),
-      lastname: new FormControl('Doe', Validators.required),
-      email: new FormControl('john.doe@example.com', [Validators.required, Validators.email]),
-      phone: new FormControl('1234567890', [Validators.required, Validators.pattern('^\d{10}$')]),
-      address: new FormControl('123 Main St', Validators.required),
-    });
+    // Set values for form controls
+    formControls['firstname'].setValue('John');
+    formControls['lastname'].setValue('Doe');
+    formControls['email'].setValue('john.doe@example.com');
+    formControls['phone'].setValue('1234567890');
+    formControls['address'].setValue('123 Main St.');
 
-    spyOn(component, 'onSubmit');
+    tick(); // Wait for changes to propagate
 
-    const submitButton = fixture.nativeElement.querySelector('button[type="submit"]');
-    submitButton.click();
-    tick();
-
-    expect(component.onSubmit).toHaveBeenCalled();
+    expect(form.valid).toBeTruthy(); // Form should be valid now with all required fields.
   }));
 
-
+  it('should display error messages for required fields', () => {
+    const employeeForm: NgForm = component.employeeForm;
   
+    // Set values for form controls
+    employeeForm.form.controls['firstname'].setValue('');
+    employeeForm.form.controls['lastname'].setValue('');
+    employeeForm.form.controls['email'].setValue('');
+    employeeForm.form.controls['phone'].setValue('');
+    employeeForm.form.controls['address'].setValue('');
+  
+    // Set each input element as "touched"
+    employeeForm.form.controls['firstname'].markAsTouched();
+    employeeForm.form.controls['lastname'].markAsTouched();
+    employeeForm.form.controls['email'].markAsTouched();
+    employeeForm.form.controls['phone'].markAsTouched();
+    employeeForm.form.controls['address'].markAsTouched();
+  
+    fixture.detectChanges(); // Update the view to reflect the changes
+  
+    const firstnameError = fixture.nativeElement.querySelector('.error[for="firstname"]');
+    expect(firstnameError).toBeTruthy();
+  
+    const lastnameError = fixture.nativeElement.querySelector('.error[for="lastname"]');
+    expect(lastnameError).toBeTruthy();
+  
+    const emailError = fixture.nativeElement.querySelector('.error[for="email"]');
+    expect(emailError).toBeTruthy();
+  
+    const phoneError = fixture.nativeElement.querySelector('.error[for="phone"]');
+    expect(phoneError).toBeTruthy();
+  
+    const addressError = fixture.nativeElement.querySelector('.error[for="address"]');
+    expect(addressError).toBeTruthy();
+  });
+
+  /*it('should have a form with required fields', () => {
+        // const form = component.employeeForm;
+        fixture.whenStable().then(()=>{
+            const empFrom = component.employeeForm; //employeeForm?.form.controls['firstname'];
+            // from?.setValue('John');
+            const formControls = empFrom.form.controls;
+        
+            // Set values for form controls
+            formControls['firstname'].setValue('John');
+            formControls['lastname'].setValue('Doe');
+            formControls['email'].setValue('john.doe@example.com');
+            formControls['phone'].setValue('1234567890');
+            formControls['address'].setValue('123 Main St.');
+        
+            fixture.detectChanges();
+        
+            expect(empFrom.valid).toBeTruthy(); // Form should be valid now with all required fields.
+        })
+        
+    });
+
+    it('should display error messages for required fields', () => {
+    const empFrom = component.employeeForm;
+    empFrom.markAsTouched(); // Mark all fields as touched to trigger error messages.
+
+    const firstnameError = fixture.nativeElement.querySelector('.error[for="firstname"]');
+    expect(firstnameError).toBeTruthy();
+
+    const lastnameError = fixture.nativeElement.querySelector('.error[for="lastname"]');
+    expect(lastnameError).toBeTruthy();
+
+    const emailError = fixture.nativeElement.querySelector('.error[for="email"]');
+    expect(emailError).toBeTruthy();
+
+    const phoneError = fixture.nativeElement.querySelector('.error[for="phone"]');
+    expect(phoneError).toBeTruthy();
+
+    const addressError = fixture.nativeElement.querySelector('.error[for="address"]');
+    expect(addressError).toBeTruthy();
+  });
+    
+
+  it('should display error messages for required fields', () => {
+    const employeeForm: NgForm = component.employeeForm;
+  
+    // Set values for form controls
+    employeeForm.form.controls['firstname'].setValue('');
+    employeeForm.form.controls['lastname'].setValue('');
+    employeeForm.form.controls['email'].setValue('');
+    employeeForm.form.controls['phone'].setValue('');
+    employeeForm.form.controls['address'].setValue('');
+  
+    // Set each input element as "touched"
+    employeeForm.form.controls['firstname'].markAsTouched();
+    employeeForm.form.controls['lastname'].markAsTouched();
+    employeeForm.form.controls['email'].markAsTouched();
+    employeeForm.form.controls['phone'].markAsTouched();
+    employeeForm.form.controls['address'].markAsTouched();
+  
+    fixture.detectChanges(); // Update the view to reflect the changes
+  
+    const firstnameError = fixture.nativeElement.querySelector('.error[for="firstname"]');
+    expect(firstnameError).toBeTruthy();
+  
+    const lastnameError = fixture.nativeElement.querySelector('.error[for="lastname"]');
+    expect(lastnameError).toBeTruthy();
+  
+    const emailError = fixture.nativeElement.querySelector('.error[for="email"]');
+    expect(emailError).toBeTruthy();
+  
+    const phoneError = fixture.nativeElement.querySelector('.error[for="phone"]');
+    expect(phoneError).toBeTruthy();
+  
+    const addressError = fixture.nativeElement.querySelector('.error[for="address"]');
+    expect(addressError).toBeTruthy();
+  });
+
+
+
+  */
+//   it('should have a form with required fields', () => {
+//     const form = new FormGroup({
+//       firstname: new FormControl('', Validators.required),
+//       lastname: new FormControl('', Validators.required),
+//       email: new FormControl('', [Validators.required, Validators.email]),
+//       phone: new FormControl('', [Validators.required, Validators.pattern('^\d{10}$')]),
+//       address: new FormControl('', Validators.required),
+//     }); 
+
+//     form.controls['firstname'].setValue('John');
+//     form.controls['lastname'].setValue('Doe');
+//     form.controls['email'].setValue('john.doe@example.com');
+//     form.controls['phone'].setValue('1234567890');
+//     form.controls['address'].setValue('123 Main St.');
+
+//     expect(form.valid).toBeTruthy();
+//   });
+
+//   it('should submit the form when valid', fakeAsync(() => {
+//     const form = new FormGroup({
+//       firstname: new FormControl('John', Validators.required),
+//       lastname: new FormControl('Doe', Validators.required),
+//       email: new FormControl('john.doe@example.com', [Validators.required, Validators.email]),
+//       phone: new FormControl('1234567890', [Validators.required, Validators.pattern('^\d{10}$')]),
+//       address: new FormControl('123 Main St', Validators.required),
+//     });
+
+//     spyOn(component, 'onSubmit');
+
+//     const submitButton = fixture.nativeElement.querySelector('button[type="submit"]');
+//     submitButton.click();
+//     tick();
+
+//     expect(component.onSubmit).toHaveBeenCalled();
+//   }));
+
 });
 
 
